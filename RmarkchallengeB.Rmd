@@ -1,0 +1,31 @@
+---
+title: "Challenge B in R Programming"
+author: "D. Goninet & D. Lachiver"
+date: "25 novembre 2017"
+output: pdf_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+install.packages("readr", contriburl = "https://cloud.r-project.org")
+install.packages("class", contriburl = "https://cloud.r-project.org")
+library(readr)
+library(class)
+```
+
+Our Github repository : 
+"https://github.com/doriangoninet/RProgChallengeB"
+
+# Task 1B
+
+```{r 1B.setup, include = FALSE}
+# importing data
+train <- read_csv("train.csv")
+```
+
+We chose the K-Nearest Neighbour - called KNN lower.
+USE package "knncat" for categorical & continous variables.
+
+```{r}
+knn()
+```
