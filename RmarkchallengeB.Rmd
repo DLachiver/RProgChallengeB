@@ -1,5 +1,6 @@
 ---
 title: "Challenge B in R Programming"
+pandoc_args : --filter path/to/filter.py
 author: "D. Goninet & D. Lachiver"
 date: "25 novembre 2017"
 output: pdf_document
@@ -10,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r packages, include = FALSE}
-load.libraries <- c('tidyverse', 'readr', 'class', 'np')
+load.libraries <- c('tidyverse', 'readr', 'class', 'np', 'stringr', 'knitr')
 install.lib <- load.libraries[!load.libraries %in% installed.packages()]
 for(libs in install.lib) install.packages(libs, dependencies = TRUE)
 sapply(load.libraries, require, character = TRUE)
@@ -109,7 +110,44 @@ We generated predictions for both models, computed their difference line by line
 
 ## Step 1
 
-```{r 3B.setup, eval=FALSE, include=TRUE}
+```{r 3B.step1, include=FALSE}
 CNIL <- read.csv("OpenCNIL.csv", sep = ";", encoding = "Winlatin1")
 head(CNIL)
+```
+
+## Step 2
+
+```{r 3B.step2, echo=FALSE, results='asis'}
+
+dept <- str_sub(CNIL$Code_Postal, 1, 2)
+CNIL2 <- data.frame(CNIL, dept)
+table <- table(CNIL2$dept)
+
+table2 <- data.frame(table)[-(1:2),]
+nicetable <- data.frame(table2)[-(98:109),]
+k <- kable(nicetable, row.names = FALSE, col.names = c("Dept.", "Nb. of CNIL nominated"))
+
+t1 <- nicetable[1:33,]
+t2 <- nicetable[34:66,]
+t3 <- nicetable[67:97,]
+
+kable(list(t1, t2, t3), row.names = FALSE, col.names = c("Dept.", "Nb. of CNIL nominated"), format = "latex", align = 'c')
+```
+
+## Step 3
+
+```{r 3B.step3, echo=FALSE}
+info <- read.csv("oui.csv", sep = ";", encoding = "Winlatin1")
+merge <- merge(CNIL, info, by.x = "ï..Siren", by.y = "SIREN")
+
+plot <- ggplot(merge, aes(LIBTEFEN)) +
+  geom_bar() +
+  theme(legend.position = 'none') +
+  theme(axis.text.x = element_text(size = 6)) +
+  theme(axis.text.y = element_text(size = 10)) +
+  scale_x_discrete(name ="Size of companies", limits=c("10 à 19 salariés", "20 à 49 salariés", "50 à 99 salariés", "100 à 199 salariés", "200 à 249 salariés", "500 à 999 salariés", "2 000 à 4 999 salariés")) +
+  ggtitle("Plot TASK 3B") +
+  ylab("Number of companies")
+print(plot)
+
 ```
